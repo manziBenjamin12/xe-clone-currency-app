@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | Rural Care Clinic</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; }
+        body { background: #d9e3e8; }
+        .app { max-width: 1400px; margin: 0 auto; background: #f4f7fc; min-height: 100vh; }
+        .header { background: #1e3a4d; padding: 1.2rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .logo h1 { color: white; font-size: 1.5rem; }
+        .logo p { color: #a8c8d8; font-size: 0.75rem; }
+        .offline-badge { background: #c44536; color: white; padding: 0.5rem 1.2rem; border-radius: 50px; font-size: 0.8rem; }
+        .nav-menu { background: white; padding: 0 1.5rem; display: flex; flex-wrap: wrap; gap: 0.2rem; border-bottom: 1px solid #e2edf2; }
+        .nav-menu a { padding: 1rem 1.3rem; text-decoration: none; color: #1f4b5c; font-weight: 600; border-bottom: 3px solid transparent; }
+        .nav-menu a.active { color: #2c9b77; border-bottom-color: #2c9b77; }
+        .nav-menu a:hover { background: #eaf4f8; }
+        .container { padding: 2rem; }
+        .card { background: white; border-radius: 28px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 5px 18px rgba(0,0,0,0.05); }
+        .card h2 { color: #154e63; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #e7f0f4; }
+        .feature-list { list-style: none; padding-left: 0; }
+        .feature-list li { padding: 0.5rem 0; border-bottom: 1px solid #ecf3f7; }
+        .version { background: #2c9b77; color: white; display: inline-block; padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.8rem; margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+<div class="app">
+    <div class="header">
+        <div class="logo"><h1>🏥 Rural Care Clinic Centre</h1><p>Digital Patient Check-in System (offline)</p></div>
+        <div class="offline-badge">⚠️ You are working OFFLINE</div>
+    </div>
+    <div class="nav-menu">
+        <a href="index.html">📊 Dashboard</a>
+        <a href="checkin.html">📝 Check-in</a>
+        <a href="patients.html">👥 Patients</a>
+        <a href="appointments.html">📅 Appointments</a>
+        <a href="reports.html">📈 Reports</a>
+        <a href="settings.html">⚙️ Settings</a>
+        <a href="backup.html">💾 BackUp Data</a>
+        <a href="about.html" class="active">ℹ️ About</a>
+    </div>
+    <div class="container">
+        <div class="card">
+            <h2>ℹ️ About Rural Care Clinic Centre</h2>
+            <div class="version">Version 1.0.0</div>
+            <p><strong>Complete Offline Patient Management System</strong></p>
+            <p style="margin-top: 1rem;">Designed specifically for rural clinics with limited or no internet connectivity. All data is stored locally on your device.</p>
+        </div>
+        <div class="card">
+            <h2>📋 Features</h2>
+            <ul class="feature-list">
+                <li>📊 Dashboard with real-time statistics</li>
+                <li>📝 Patient Check-in (new/returning patients)</li>
+                <li>👥 Complete Patient Registry</li>
+                <li>📅 Appointment Scheduling</li>
+                <li>📈 Reports & Analytics</li>
+                <li>⚙️ System Settings</li>
+                <li>💾 Backup & Restore functionality</li>
+                <li>🔒 100% offline - No internet required</li>
+                <li>📀 Data stored locally in browser</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h2>💡 How to Use</h2>
+            <ul class="feature-list">
+                <li>1. Go to <strong>Check-in</strong> page to register new patients</li>
+                <li>2. View all patients on the <strong>Patients</strong> page</li>
+                <li>3. Schedule appointments on <strong>Appointments</strong> page</li>
+                <li>4. Export your data regularly on <strong>BackUp Data</strong> page</li>
+                <li>5. All data saves automatically to this device</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h2>📧 Support</h2>
+            <p>For questions or support, contact your clinic administrator.</p>
+            <p style="margin-top: 0.5rem;">© 2026 Rural Care Clinic Centre — Empowering remote healthcare with offline technology.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

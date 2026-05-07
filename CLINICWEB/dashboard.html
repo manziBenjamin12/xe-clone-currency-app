@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Rural Care Clinic</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background: #d9e3e8;
+            min-height: 100vh;
+        }
+        .app {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #f4f7fc;
+            min-height: 100vh;
+        }
+        .header {
+            background: #1e3a4d;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .logo h1 { color: white; font-size: 1.5rem; }
+        .logo p { color: #a8c8d8; font-size: 0.75rem; }
+        .offline-badge {
+            background: #c44536;
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .nav-menu {
+            background: white;
+            padding: 0 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.2rem;
+            border-bottom: 1px solid #e2edf2;
+        }
+        .nav-menu a {
+            padding: 1rem 1.3rem;
+            text-decoration: none;
+            color: #1f4b5c;
+            font-weight: 600;
+            transition: 0.2s;
+            border-bottom: 3px solid transparent;
+        }
+        .nav-menu a.active {
+            color: #2c9b77;
+            border-bottom-color: #2c9b77;
+        }
+        .nav-menu a:hover { background: #eaf4f8; }
+        .container { padding: 2rem; }
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.05);
+        }
+        .card h2 {
+            color: #154e63;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e7f0f4;
+        }
+        .stats-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-box {
+            background: #f8fbfd;
+            flex: 1;
+            min-width: 150px;
+            padding: 1.5rem;
+            text-align: center;
+            border-radius: 20px;
+            border: 1px solid #e6edf2;
+        }
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2c9b77;
+        }
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 40px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            background: #ecf3f7;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: #2c9b77;
+            color: white;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid #ecf3f7;
+        }
+        th { background: #f2f8fc; color: #1a5d74; }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1e3a4d;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 40px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <div class="header">
+        <div class="logo">
+            <h1>🏥 Rural Care Clinic Centre</h1>
+            <p>Digital Patient Check-in System (offline)</p>
+        </div>
+        <div class="offline-badge">⚠️ You are working OFFLINE</div>
+    </div>
+    <div class="nav-menu">
+        <a href="index.html" class="active">📊 Dashboard</a>
+        <a href="checkin.html">📝 Check-in</a>
+        <a href="patients.html">👥 Patients</a>
+        <a href="appointments.html">📅 Appointments</a>
+        <a href="reports.html">📈 Reports</a>
+        <a href="settings.html">⚙️ Settings</a>
+        <a href="backup.html">💾 BackUp Data</a>
+        <a href="about.html">ℹ️ About</a>
+    </div>
+    <div class="container">
+        <div class="card">
+            <h2>📊 Dashboard Overview</h2>
+            <div class="stats-grid" id="statsGrid"></div>
+        </div>
+        <div class="card">
+            <h2>⚡ Quick Actions</h2>
+            <div class="quick-actions">
+                <a href="checkin.html" class="btn btn-primary">➕ New Check-in</a>
+                <a href="checkin.html" class="btn">📋 View Cue</a>
+                <a href="appointments.html" class="btn">📅 Appointments</a>
+                <a href="backup.html" class="btn">💾 Backup Data</a>
+            </div>
+        </div>
+        <div class="card">
+            <h2>📌 Recently Checked-in Patients</h2>
+            <div id="recentList">Loading...</div>
+        </div>
+    </div>
+</div>
+<div id="toast" class="toast"></div>
+
+<script>
+    const STORAGE_KEY = 'rural_clinic_data';
+    let patients = [];
+
+    function loadData() {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if(stored) {
+            patients = JSON.parse(stored);
+        } else {
+            patients = [
+                { id: '1', name: 'Marianne Chebet', age: 36, gender: 'Female', phone: '+254712345678', status: 'Returning', checkedIn: true, checkinTime: new Date().toLocaleString() },
+                { id: '2', name: 'John Omondi', age: 31, gender: 'Male', phone: '+254722334455', status: 'NEW', checkedIn: true, checkinTime: new Date().toLocaleString() },
+                { id: '3', name: 'Grace Njoroge', age: 58, gender: 'Female', phone: '+254733556677', status: 'Returning', checkedIn: false, checkinTime: null }
+            ];
+            saveData();
+        }
+    }
+
+    function saveData() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(patients));
+    }
+
+    function renderDashboard() {
+        const checkedIn = patients.filter(p => p.checkedIn === true).length;
+        const total = patients.length;
+        const returning = patients.filter(p => p.status === 'Returning').length;
+        
+        document.getElementById('statsGrid').innerHTML = `
+            <div class="stat-box"><div class="stat-number">${total}</div><div>Total Patients</div></div>
+            <div class="stat-box"><div class="stat-number">${checkedIn}</div><div>Checked-in Today</div></div>
+            <div class="stat-box"><div class="stat-number">${returning}</div><div>Returning Patients</div></div>
+            <div class="stat-box"><div class="stat-number">${patients.filter(p => p.checkedIn).length}</div><div>In Queue</div></div>
+        `;
+        
+        const recent = patients.filter(p => p.checkedIn).slice(0,5);
+        if(recent.length === 0) {
+            document.getElementById('recentList').innerHTML = '<em>No recent check-ins</em>';
+        } else {
+            let html = `<table><tr><th>Name</th><th>Phone</th><th>Status</th><th>Time</th></tr>`;
+            recent.forEach(p => {
+                html += `<tr><td>${p.name}</td><td>${p.phone}</td><td>${p.status}</td><td>${p.checkinTime || '—'}</td></tr>`;
+            });
+            html += `</table>`;
+            document.getElementById('recentList').innerHTML = html;
+        }
+    }
+
+    loadData();
+    renderDashboard();
+</script>
+</body>
+</html>

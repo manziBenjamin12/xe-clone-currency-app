@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointments | Rural Care Clinic</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; }
+        body { background: #d9e3e8; }
+        .app { max-width: 1400px; margin: 0 auto; background: #f4f7fc; min-height: 100vh; }
+        .header { background: #1e3a4d; padding: 1.2rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .logo h1 { color: white; font-size: 1.5rem; }
+        .logo p { color: #a8c8d8; font-size: 0.75rem; }
+        .offline-badge { background: #c44536; color: white; padding: 0.5rem 1.2rem; border-radius: 50px; font-size: 0.8rem; }
+        .nav-menu { background: white; padding: 0 1.5rem; display: flex; flex-wrap: wrap; gap: 0.2rem; border-bottom: 1px solid #e2edf2; }
+        .nav-menu a { padding: 1rem 1.3rem; text-decoration: none; color: #1f4b5c; font-weight: 600; border-bottom: 3px solid transparent; }
+        .nav-menu a.active { color: #2c9b77; border-bottom-color: #2c9b77; }
+        .nav-menu a:hover { background: #eaf4f8; }
+        .container { padding: 2rem; }
+        .card { background: white; border-radius: 28px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 5px 18px rgba(0,0,0,0.05); }
+        .card h2 { color: #154e63; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #e7f0f4; }
+        .form-grid { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
+        .form-field { flex: 1; min-width: 150px; }
+        label { font-weight: 600; color: #1f5168; display: block; margin-bottom: 0.3rem; font-size: 0.8rem; }
+        input, select { width: 100%; padding: 0.7rem; border-radius: 20px; border: 1px solid #cbdbe0; }
+        .btn { padding: 0.7rem 1.5rem; border-radius: 40px; border: none; font-weight: 600; cursor: pointer; }
+        .btn-primary { background: #2c9b77; color: white; }
+        .btn-danger { background: #c44536; color: white; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.8rem; text-align: left; border-bottom: 1px solid #ecf3f7; }
+        th { background: #f2f8fc; }
+        .toast { position: fixed; bottom: 20px; right: 20px; background: #1e3a4d; color: white; padding: 12px 24px; border-radius: 40px; display: none; }
+    </style>
+</head>
+<body>
+<div class="app">
+    <div class="header">
+        <div class="logo"><h1>🏥 Rural Care Clinic Centre</h1><p>Digital Patient Check-in System (offline)</p></div>
+        <div class="offline-badge">⚠️ You are working OFFLINE</div>
+    </div>
+    <div class="nav-menu">
+        <a href="index.html">📊 Dashboard</a>
+        <a href="checkin.html">📝 Check-in</a>
+        <a href="patients.html">👥 Patients</a>
+        <a href="appointments.html" class="active">📅 Appointments</a>
+        <a href="reports.html">📈 Reports</a>
+        <a href="settings.html">⚙️ Settings</a>
+        <a href="backup.html">💾 BackUp Data</a>
+        <a href="about.html">ℹ️ About</a>
+    </div>
+    <div class="container">
+        <div class="card">
+            <h2>📅 Schedule New Appointment</h2>
+            <div class="form-grid">
+                <div class="form-field"><label>Patient Name</label><input type="text" id="appPatientName" placeholder="Enter patient name"></div>
+                <div class="form-field"><label>Date</label><input type="date" id="appDate"></div>
+                <div class="form-field"><label>Time</label><input type="time" id="appTime"></div>
+                <div class="form-field"><label>Reason</label><input type="text" id="appReason" placeholder="Reason for visit"></div>
+            </div>
+            <button class="btn btn-primary" id="addAppBtn">+ Add Appointment</button>
+        </div>
+        <div class="card">
+            <h2>📋 Upcoming Appointments</h2>
+            <div id="appointmentsList">Loading...</div>
+        </div>
+    </div>
+</div>
+<div id="toast" class="toast"></div>
+
+<script>
+    const APPOINTMENTS_KEY = 'rural_appointments';
+    let appointments = [];
+
+    function loadData() {
+        const stored = localStorage.getItem(APPOINTMENTS_KEY);
+        if(stored) appointments = JSON.parse(stored);
+        else appointments = [];
+    }
+
+    function saveData() { localStorage.setItem(APPOINTMENTS_KEY, JSON.stringify(appointments)); }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.style.display = 'block';
+        setTimeout(() => toast.style.display = 'none', 2500);
+    }
+
+    function renderAppointments() {
+        if(appointments.length === 0) {
+            document.getElementById('appointmentsList').innerHTML = '<em>No appointments scheduled</em>';
+            return;
+        }
+        let html = `<table><tr><th>Patient</th><th>Date</th><th>Time</th><th>Reason</th><th>Action</th></tr>`;
+        appointments.forEach((a, index) => {
+            html += `<tr>
+                <td>${a.patientName}</td>
+                <td>${a.date}</td>
+                <td>${a.time}</td>
+                <td>${a.reason}</td>
+                <td><button class="btn" onclick="deleteApp(${index})">🗑️ Delete</button></td>
+            </tr>`;
+        });
+        html += `</table>`;
+        document.getElementById('appointmentsList').innerHTML = html;
+    }
+
+    window.deleteApp = function(index) {
+        appointments.splice(index, 1);
+        saveData();
+        renderAppointments();
+        showToast('Appointment deleted');
+    };
+
+    function addAppointment() {
+        const patientName = document.getElementById('appPatientName').value.trim();
+        const date = document.getElementById('appDate').value;
+        const time = document.getElementById('appTime').value;
+        const reason = document.getElementById('appReason').value;
+        if(!patientName || !date) {
+            showToast('Please enter patient name and date');
+            return;
+        }
+        appointments.push({ patientName, date, time, reason });
+        saveData();
+        renderAppointments();
+        document.getElementById('appPatientName').value = '';
+        document.getElementById('appDate').value = '';
+        document.getElementById('appTime').value = '';
+        document.getElementById('appReason').value = '';
+        showToast('Appointment added');
+    }
+
+    loadData();
+    renderAppointments();
+    document.getElementById('addAppBtn').onclick = addAppointment;
+</script>
+</body>
+</html>

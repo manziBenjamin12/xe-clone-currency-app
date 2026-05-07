@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check-in | Rural Care Clinic</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; }
+        body { background: #d9e3e8; }
+        .app { max-width: 1400px; margin: 0 auto; background: #f4f7fc; min-height: 100vh; }
+        .header { background: #1e3a4d; padding: 1.2rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .logo h1 { color: white; font-size: 1.5rem; }
+        .logo p { color: #a8c8d8; font-size: 0.75rem; }
+        .offline-badge { background: #c44536; color: white; padding: 0.5rem 1.2rem; border-radius: 50px; font-size: 0.8rem; }
+        .nav-menu { background: white; padding: 0 1.5rem; display: flex; flex-wrap: wrap; gap: 0.2rem; border-bottom: 1px solid #e2edf2; }
+        .nav-menu a { padding: 1rem 1.3rem; text-decoration: none; color: #1f4b5c; font-weight: 600; transition: 0.2s; border-bottom: 3px solid transparent; }
+        .nav-menu a.active { color: #2c9b77; border-bottom-color: #2c9b77; }
+        .nav-menu a:hover { background: #eaf4f8; }
+        .container { padding: 2rem; }
+        .card { background: white; border-radius: 28px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 5px 18px rgba(0,0,0,0.05); }
+        .card h2 { color: #154e63; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #e7f0f4; }
+        .form-grid { display: flex; flex-wrap: wrap; gap: 1.2rem; margin-bottom: 1.2rem; }
+        .form-field { flex: 1; min-width: 180px; }
+        label { font-weight: 600; color: #1f5168; display: block; margin-bottom: 0.3rem; font-size: 0.8rem; }
+        input, select, textarea { width: 100%; padding: 0.8rem; border-radius: 20px; border: 1px solid #cbdbe0; font-size: 0.9rem; }
+        .radio-group { display: flex; gap: 1.5rem; align-items: center; margin-top: 0.5rem; }
+        .btn { padding: 0.7rem 1.5rem; border-radius: 40px; border: none; font-weight: 600; cursor: pointer; }
+        .btn-primary { background: #2c9b77; color: white; }
+        .btn-secondary { background: #ecf3f7; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.8rem; text-align: left; border-bottom: 1px solid #ecf3f7; }
+        th { background: #f2f8fc; }
+        .toast { position: fixed; bottom: 20px; right: 20px; background: #1e3a4d; color: white; padding: 12px 24px; border-radius: 40px; display: none; }
+    </style>
+</head>
+<body>
+<div class="app">
+    <div class="header">
+        <div class="logo"><h1>🏥 Rural Care Clinic Centre</h1><p>Digital Patient Check-in System (offline)</p></div>
+        <div class="offline-badge">⚠️ You are working OFFLINE</div>
+    </div>
+    <div class="nav-menu">
+        <a href="index.html">📊 Dashboard</a>
+        <a href="checkin.html" class="active">📝 Check-in</a>
+        <a href="patients.html">👥 Patients</a>
+        <a href="appointments.html">📅 Appointments</a>
+        <a href="reports.html">📈 Reports</a>
+        <a href="settings.html">⚙️ Settings</a>
+        <a href="backup.html">💾 BackUp Data</a>
+        <a href="about.html">ℹ️ About</a>
+    </div>
+    <div class="container">
+        <div class="card">
+            <h2>📝 Patient Check-In</h2>
+            <div class="form-grid">
+                <div class="form-field"><label>Full name *</label><input type="text" id="fullName" placeholder="Enter full name ..."></div>
+                <div class="form-field"><label>Date of birth</label><input type="text" id="dob" placeholder="DD/MM/YYYY"></div>
+                <div class="form-field"><label>Phone Number</label><input type="tel" id="phone" placeholder="Enter phone number..."></div>
+            </div>
+            <div class="form-grid">
+                <div class="form-field"><label>Age</label><input type="number" id="age" placeholder="Enter Age..."></div>
+                <div class="form-field"><label>Gender</label><select id="gender"><option value="">Select gender</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+                <div class="form-field"><label>Patient status</label><div class="radio-group"><label><input type="radio" name="status" value="NEW" checked> NEW</label><label><input type="radio" name="status" value="Returning"> Returning</label></div></div>
+            </div>
+            <div class="form-field"><label>Notes (optional)</label><textarea id="notes" rows="2" placeholder="Enter notes about patient ..."></textarea></div>
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button class="btn btn-primary" id="checkinBtn">✅ Check-In Patient</button>
+                <button class="btn btn-secondary" id="clearBtn">⟳ Clear Form</button>
+            </div>
+        </div>
+        <div class="card">
+            <h2>👥 Current Cue (Checked-in)</h2>
+            <div id="cueList">Loading...</div>
+        </div>
+    </div>
+</div>
+<div id="toast" class="toast"></div>
+
+<script>
+    const STORAGE_KEY = 'rural_clinic_data';
+    let patients = [];
+
+    function loadData() {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if(stored) patients = JSON.parse(stored);
+        else patients = [];
+    }
+
+    function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(patients)); }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.style.display = 'block';
+        setTimeout(() => toast.style.display = 'none', 2500);
+    }
+
+    function renderCue() {
+        const cue = patients.filter(p => p.checkedIn === true);
+        if(cue.length === 0) {
+            document.getElementById('cueList').innerHTML = '<em>No patients in cue</em>';
+            return;
+        }
+        let html = `<table><tr><th>Name</th><th>Phone</th><th>Status</th><th>Check-in time</th></tr>`;
+        cue.forEach(p => {
+            html += `<tr><td>${p.name}</td><td>${p.phone}</td><td>${p.status}</td><td>${p.checkinTime}</td></tr>`;
+        });
+        html += `</table>`;
+        document.getElementById('cueList').innerHTML = html;
+    }
+
+    function checkIn() {
+        const name = document.getElementById('fullName').value.trim();
+        if(!name) { showToast('Please enter patient name'); return; }
+        const newPatient = {
+            id: Date.now().toString(),
+            name: name,
+            dob: document.getElementById('dob').value,
+            phone: document.getElementById('phone').value,
+            age: document.getElementById('age').value,
+            gender: document.getElementById('gender').value,
+            status: document.querySelector('input[name="status"]:checked').value,
+            notes: document.getElementById('notes').value,
+            checkedIn: true,
+            checkinTime: new Date().toLocaleString()
+        };
+        patients.unshift(newPatient);
+        saveData();
+        showToast(`✅ ${name} checked-in successfully`);
+        document.getElementById('fullName').value = '';
+        document.getElementById('dob').value = '';
+        document.getElementById('phone').value = '';
+        document.getElementById('age').value = '';
+        document.getElementById('gender').value = '';
+        document.getElementById('notes').value = '';
+        renderCue();
+    }
+
+    loadData();
+    renderCue();
+    document.getElementById('checkinBtn').onclick = checkIn;
+    document.getElementById('clearBtn').onclick = () => {
+        document.getElementById('fullName').value = '';
+        document.getElementById('dob').value = '';
+        document.getElementById('phone').value = '';
+        document.getElementById('age').value = '';
+        document.getElementById('gender').value = '';
+        document.getElementById('notes').value = '';
+        showToast('Form cleared');
+    };
+</script>
+</body>
+</html>
