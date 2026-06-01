@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+     <script src="js/script.js"></script>
+    <title>Conversion History</title>
+    <link rel="stylesheet" href="css/style.css">
+   
+</head>
+
+<body>
+
+<header class="header">
+     <div class="logo">
+        <img src="assets/Logo.png" control width="75" height="75">
+        </div>
+    <div class="tittle">
+       <h3>CURRENCY EXCHANGE WEBSITE</h3>
+    </div>
+    <nav>
+            <button><a href="index.html">Home</a></button>&nbsp;
+            <button><a href="converter.html">Full Converter</a></button>
+            <button><a href="details.html">Current Details</a></button>
+            <button><a href="history.html" class="active">History</a></button>
+            <button><a href="settings.html">Settings</a></button>
+        </nav>
+</header>
+<h3>The Historical of Conversation</h3>
+<div class="history-container">
+
+    <!-- Filter -->
+    <div class="controls">
+        <select id="filter">
+            <option value="ALL">All</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="RWF">RWF</option>
+        </select>
+
+        <button onclick="clearHistory()">Clear History</button>
+    </div>
+
+    <!-- History List -->
+    <div id="historyList" class="history-list"></div>
+
+</div>
+
+<script src="js/script.js"></script>
+<footer class="footer">
+
+    <h3> Benjamin's Currency Exchange</h3>
+
+    <p> Phone: +250 788 530 489</p>
+    <p>Email: benjaminexchange@gmail.com</p>
+    <p> Location: Kigali, Rwanda</p>
+    <p>&copy Benjamin's Currency Exchange</p>
+</footer>
+</body>
+</html>

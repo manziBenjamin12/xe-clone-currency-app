@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+     <script src="js/script.js"></script>
+    <title>Currency Details</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<header class="header">
+    
+
+        <div class="logo">
+        <img src="assets/Logo.png" control width="75" height="75">
+        </div>
+        <div class="tittle">
+        <h3>CURRENCY EXCHANGE WEBSITE</h3>
+        </div>
+        
+        <nav>
+            <button><a href="index.html">Home</a></button>
+            <button><a href="converter.html">Full Converter</a></button>
+            <button><a href="history.html">History</a></button>
+            <button><a href="settings.html">Settings</a></button>
+        </nav>
+    
+</header>
+<h2>Currency Details</h2>
+<div class="details-container">
+
+    <!-- Currency Info -->
+    <div class="card">
+        <h3>US Dollar (USD)</h3>
+        <p>Country: United States 🇺🇸</p>
+        <p>Current Rate: 1 USD = <span id="usdRate">1250</span> RWF</p>
+        <p>Updated: <span id="time"></span></p>
+    </div>
+
+    <!-- Comparison -->
+    <div class="card">
+        <h3>Comparison</h3>
+        <ul>
+            <li>1 USD = 0.93 EUR</li>
+            <li>1 USD = 150 KES</li>
+            <li>1 USD = 0.76 GBP</li>
+        </ul>
+    </div>
+
+    <!-- Chart -->
+    <div class="card">
+        <h3>Rate Trend (Mock Chart)</h3>
+        <canvas id="chart" width="400" height="200"></canvas>
+    </div>
+
+</div>
+
+<script src="js/script.js"></script>
+<footer class="footer">
+
+    <h3> Benjamin's Currency Exchange</h3>
+
+    <p> Phone: +250 788 530 489</p>
+    <p>Email: benjaminexchange@gmail.com</p>
+    <p> Location: Kigali, Rwanda</p>
+    <p>&copy Benjamin's Currency Exchange</p>
+</footer>
+</body>
+</html>

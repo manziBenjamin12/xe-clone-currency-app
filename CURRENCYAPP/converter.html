@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <script src="js/script.js"></script>
+        <link rel="stylesheet" href="css/style.css"></head>
+    <body>
+         <header class="header">
+            <div class="logo">
+        <img src="assets/Logo.png" control width="75" height="75">
+        </div>
+        <div class="title">
+        <h3>CURRENCY EXCHANGE WEBSITE</h3>
+        </div>
+        <nav>
+            <button><a href="index.html">Home</a></button>&nbsp;            
+            <button><a href="details.html">Current Details</a></button>&nbsp;
+            <button><a href="history.html">History</a></button>&nbsp;
+            <button><a href="settings.html">Settings</a></button>
+        </nav>
+    </header>
+<h2>Convert</h2>
+        
+    <div class="converter">
+        <h3>Quick Converter</h3>
+
+        <input type="number" id="amount" placeholder="Enter amount">
+
+        <select id="currency">
+           <option value="USD_RWF">USD → RWF (US Dollar)</option>
+<option value="EUR_RWF">EUR → RWF (Euro)</option>
+<option value="GBP_RWF">GBP → RWF (British Pound)</option>
+<option value="KES_RWF">KES → RWF (Kenyan Shilling)</option>
+<option value="UGX_RWF">UGX → RWF (Ugandan Shilling)</option>
+<option value="TZS_RWF">TZS → RWF (Tanzanian Shilling)</option>
+
+<option value="RWF_USD">RWF → USD</option>
+<option value="RWF_EUR">RWF → EUR</option>
+<option value="RWF_GBP">RWF → GBP</option>
+<option value="RWF_KES">RWF → KES</option>
+<option value="RWF_UGX">RWF → UGX</option>
+<option value="RWF_TZS">RWF → TZS</option>
+
+        </select>
+
+        <button onclick="convert()">Convert</button>
+
+        <div id="result"></div>
+    </div>
+        <script src="js/script.js"></script>
+        <footer class="footer">
+
+    <h3> Benjamin's Currency Exchange</h3>
+
+    <p> Phone: +250 788 530 489</p>
+    <p>Email: benjaminexchange@gmail.com</p>
+    <p> Location: Kigali, Rwanda</p>
+    <p>&copy Benjamin's Currency Exchange</p>
+</footer>
+    </body>
+</html>
